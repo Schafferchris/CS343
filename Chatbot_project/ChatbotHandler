@@ -1,0 +1,45 @@
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import json
+from urllib.parse import parse_qs
+
+class ChatbotHandler(BaseHTTPRequestHandler):
+    # Initialize the bot
+    bot = SimpleBot()
+
+    def _set_headers(self, status_code=200, content_type="application/json"):
+        """Set response headers."""
+        self.send_response(status_code)
+        self.send_header("Content-type", content_type)
+        self.end_headers()
+
+    def do_GET(self):
+        """Handle GET requests and serve an HTML interface."""
+        self._set_headers(content_type="text/html")
+        try:
+            with open("index.html", "r") as file:
+                html_content = file.read()
+            self.wfile.write(html_content.encode("utf-8"))
+        except Exception as e:
+            self.send_error(500, f"Error serving HTML: {str(e)}")
+
+    def do_POST(self):
+        """Handle POST requests for user input and generate bot responses."""
+        content_length = int(self.headers['Content-Length'])
+        post_data = self.rfile.read(content_length).decode('utf-8')
+        user_input = parse_qs(post_data).get('user_input', [''])[0]  # Extract user input
+
+        try:
+            # Generate bot response
+            bot_response = self.bot.respond(user_input)
+
+            # Send response back as JSON
+            self._set_headers()
+            response = json.dumps({'response': bot_response})
+            self.wfile.write(response.encode('utf-8'))
+
+        except Exception as e:
+            self.send_error(500, f"Error processing input: {str(e)}")
+
+    def log_message(self, format, *args):
+        """Disable default logging of each request (optional)."""
+        return
