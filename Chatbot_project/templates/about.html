@@ -1,9 +1,56 @@
-<html>
-    <header>
-        In progress
-    </header>
-    <body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rule-Based Chatbot Development</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
 
-    </body>
-    <footer></footer>
+<nav id ="sidenav">
+    <a href ="javascript:void(0)" class="closebutton" onclick="closeNav()">&times;</a>
+    <a href="{{ url_for('index') }}">Home</a>
+</nav>
+<span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Menu</span>
+
+<script>
+    function openNav() {
+      document.getElementById("sidenav").style.width = "250px";
+    }
+    
+    function closeNav() {
+      document.getElementById("sidenav").style.width = "0";
+    }
+    </script>
+<body>
+    <h1>Rule-Based Chatbot Development</h1>
+    <p>The goal of this project was to develop a rule-based chatbot using Python and HTML. The chatbot uses predefined pattern-response pairs with regular expressions for pattern matching and dynamic responses, making the conversation more interactive. This document describes our approach, the techniques we used, the challenges faced during the development process, and how we addressed them.</p>
+
+    <h2>SimpleBot Class Design</h2>
+    <p>Our SimpleBot class was designed to handle user input and respond appropriately. During its development, the following steps were taken to design it:</p>
+    
+    <h3>Pattern-Response Pairs</h3>
+    <p>We defined 15 regular expressions using regex to capture specific user input patterns. For each regex, we paired a corresponding response, some of which were dynamic (inserting user-provided text into the response).</p>
+    
+    <p>We also designed a pattern matching system that creates a more realistic conversation by making the chatbot use a regular expression to identify user intent. We used capturing groups (parentheses) in regex to extract certain parts of the user's message, then formatted the responses using Python’s <code>.format()</code> method to insert these captured words into the response.</p>
+
+    <p>For example:</p>
+    <pre><code>r"do you (like|love) (.*)"</code></pre>
+    <p>That pattern captures whether the user asks if the bot likes or loves something and inserts the subject (like example: pizza) into the response.</p>
+    
+    <p>Response:</p>
+    <blockquote>"I don’t have feelings, but I imagine pizza is pretty interesting! Do you like pizza?"</blockquote>
+    
+    <p>However, creating these patterns was not as easy as it seems because we encountered some challenges designing regex patterns that were flexible enough to capture various sentence structures without over-matching or misinterpreting user input. For instance, while working with the "like/love" pattern, we initially captured too much of the user input, which led to generating incorrect responses like "I imagine like is pretty interesting!" Later, we were able to resolve this issue by adjusting the regex to correctly isolate and differentiate the subject from the verb.</p>
+    
+    <h3>Generic Responses</h3>
+    <p>We also created 7 generic responses in case the user's input did not match any pattern. Those responses were designed to maintain the conversation flow so that even if the user’s input does not match, the conversation will continue.</p>
+
+    <h3>REST API</h3>
+    <p>In our project, we have a GET request which is used to fetch the webpage, such as the home, About and Documentation page. The POST request is used to send a response to the chatbot handler which will interpret the response and send back a message to the user. 
+     
+    <h3>UI webpage</h3>
+    We implemented Javascript scripting to render the users input to display in a element container along with the chatbots reponse. Also created a nav bar which explores the documentation and About page for further information on the project. Moreover for consistency the design is simple and the chat window is easy to read and use. For the webpage we decided to use a lightweight library called Flask which is known for creating quick web frameworks and is easy to organize template files and CSS styling.</p>
+
+</body>
 </html>

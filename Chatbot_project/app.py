@@ -23,6 +23,8 @@ class SimpleBot:
             (r"who (created|made) you", "I was created by a talented developer to assist you!"),
             (r"thank you|thanks a lot|appreciate it", "You're welcome! Happy to help anytime."),
             (r"exit|see you later|goodbye", "Goodbye!"),
+            (r"I am well|fine|Great", "I am glad to hear that"),
+            (r"Can you help me|help|I have a question", "Sure what do you need?"),
         ]
         self.generic_responses = [
             "I'm not sure I understand. Can you clarify?",
@@ -30,9 +32,17 @@ class SimpleBot:
             "Sorry, I didn't catch that. Try asking in a different way.",
             "Hmm, I'm not sure how to respond to that.",
             "That's an interesting question! I'm not sure how to answer."
+            "Please ask again, I do not understand."
+        ]
+
+        self.value_error = [
+            "Please enter in words not random numbers..."
         ]
 
     def respond(self, message):
+        if any(char.isdigit() for char in message):
+            return self.value_error
+    
         for pattern, response in self.pattern_responses:
             match = re.search(pattern, message, re.IGNORECASE)
             if match:
@@ -41,12 +51,17 @@ class SimpleBot:
                 else:
                     return response
         return random.choice(self.generic_responses)
-
+   
 start_bot = SimpleBot()
 
 @app.route('/')
+@app.route('/home', methods=['GET'])
 def index():
     return render_template('index.html')
+
+@app.errorhandler(404)
+def page_not_found(error):
+    render_template('404.html'), 404
 
 @app.route('/get_response', methods=['POST'])
 def get_response():
@@ -59,9 +74,5 @@ def get_response():
 def about():
     return render_template('about.html')
 
-@app.route('/documentation')
-def documentation():
-    return render_template('documentation.html')
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
