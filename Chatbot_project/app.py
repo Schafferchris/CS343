@@ -5,6 +5,8 @@ import random
 app = Flask(__name__)
 
 class SimpleBot:
+    # defined 15 regular expressions using regex to capture specific user input patterns. 
+    # For each regex, we paired a corresponding response, some of which were dynamic (inserting user-provided text into the response). 
     def __init__(self):
         self.pattern_responses = [
             (r"hi|hello|hey there|good (morning|afternoon|evening)", "Hello! How can I assist you today?"),
@@ -34,11 +36,11 @@ class SimpleBot:
             "That's an interesting question! I'm not sure how to answer."
             "Please ask again, I do not understand."
         ]
-
+        # Error handling message for when user types in ints instead of strings
         self.value_error = [
             "Please enter in words not random numbers..."
         ]
-
+        # Function to match responses to appropriate matches and error handling
     def respond(self, message):
         if any(char.isdigit() for char in message):
             return self.value_error
@@ -51,28 +53,37 @@ class SimpleBot:
                 else:
                     return response
         return random.choice(self.generic_responses)
-   
-start_bot = SimpleBot()
 
-@app.route('/')
-@app.route('/home', methods=['GET'])
-def index():
-    return render_template('index.html')
+#Intializes the Chatbothandler class to be responsible for handling API requests and user responses.
 
-@app.errorhandler(404)
-def page_not_found(error):
-    render_template('404.html'), 404
-
-@app.route('/get_response', methods=['POST'])
-def get_response():
-    user_message = request.json['message']
-    bot_response = start_bot.respond(user_message)
+class ChatbotHandler():
+    def __init__(self):
+        self.bot = SimpleBot()
     
-    return jsonify({'response': bot_response})
+# Handle GET requests and serve an HTML interface.
+    @app.route('/')
+    @app.route('/home', methods=['GET'])
+    def index():
+        return render_template('index.html')
 
-@app.route('/about')
-def about():
-    return render_template('about.html')
+        #@app.errorhandler(404)
+        #def page_not_found(error):
+        #    render_template('404.html'), 404
 
+#Handle POST requests for user input and generate bot responses.
+
+    @app.route('/get_response', methods=['POST'])
+    def get_response():
+        user_message = request.json['message']
+        bot_response = ChatbotHandler().bot.respond(user_message)
+        
+        return jsonify({'response': bot_response})
+
+    @app.route('/about')
+    def about():
+        return render_template('about.html')
+
+
+#starts flask app
 if __name__ == '__main__':
     app.run(debug=False)
