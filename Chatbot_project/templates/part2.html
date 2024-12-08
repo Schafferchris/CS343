@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rule-Based Chatbot Development</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <nav id="sidenav">
+        <a href="javascript:void(0)" class="closebutton" onclick="closeNav()">&times;</a>
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('about') }}">About</a>
+        <a href="{{ url_for('part2') }}">Part 2</a>
+    </nav>
+    <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Menu</span>
+
+    <script>
+        function openNav() {
+            document.getElementById("sidenav").style.width = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("sidenav").style.width = "0";
+        }
+    </script>
+
+    <main>
+        <h1>Rule-Based Chatbot Development</h1>
+        <p>The goal of this project was to develop a chatbot that could handle both predefined and non-predefined user queries using advanced Natural Language Processing (NLP) techniques. By combining rule-based methods with machine learning approaches, the chatbot became smarter and more flexible, providing users with an engaging and natural conversational experience.</p>
+
+        <h2>Project Enhancements</h2>
+        <p>In Part 2 of the project, we focused on enabling the bot to handle text similarity and intent recognition:</p>
+        <ul>
+            <li><strong>Text Similarity:</strong> We used TF-IDF (Term Frequency-Inverse Document Frequency) to represent text as numerical vectors. This method allows the bot to identify significant words in user inputs while reducing the influence of common words like "the" or "is." By combining TF-IDF with cosine similarity, the bot can compare user input to known questions and determine the best response based on similarity scores. For instance, the bot can match "What's your name?" with "What is your name?" and provide an appropriate response.</li>
+            <li><strong>Intent Recognition:</strong> We employed rule-based logic with regular expressions to define patterns for recognizing user intents, such as greetings ("hi," "hello") or queries ("what," "how," "can you"). This allows the bot to classify messages into categories like greetings, farewells, or general questions, enabling it to provide suitable responses even when inputs deviate from known patterns.</li>
+        </ul>
+
+        <h2>NLP Techniques and Tools Used</h2>
+        
+        <h3>1. Regular Expressions</h3>
+        <p>Regular expressions were instrumental in managing predictable inputs like greetings or common queries. For example:</p>
+        <blockquote>When a user typed "hi" or "hello," the bot could recognize these patterns and respond appropriately.</blockquote>
+        <p>This functionality was carried over from our initial rule-based design and expanded for intent recognition. Patterns like "what," "how," or "can you" helped the bot classify messages into actionable categories.</p>
+
+        <h3>2. TF-IDF Vectorization</h3>
+        <p>TF-IDF was used to represent text as numerical vectors, enabling the bot to identify important words while reducing the weight of common terms. This allowed the bot to:</p>
+        <ul>
+            <li>Understand and compare user inputs with existing questions.</li>
+            <li>Handle phrasal variations, such as matching "What's your name?" to "What is your name?"</li>
+        </ul>
+
+        <h3>3. Cosine Similarity</h3>
+        <p>For unfamiliar queries, cosine similarity calculated the angle between TF-IDF vectors, with smaller angles indicating greater similarity. This approach enabled the bot to select the most appropriate response, even for paraphrased questions.</p>
+
+        <h3>4. Fallback Responses</h3>
+        <p>When the bot could not determine a suitable response, it relied on fallback mechanisms, such as:</p>
+        <blockquote>"I didn’t catch that, can you rephrase?"</blockquote>
+        <p>These responses ensured the conversation remained fluid and user-friendly, even when the bot encountered unexpected inputs.</p>
+
+        <h3>5. Flask Framework</h3>
+        <p>We developed a lightweight web interface using Flask, allowing users to interact with the chatbot directly through their browsers. This framework made it simple to:</p>
+        <ul>
+            <li>Integrate the bot’s functionality with a responsive front-end.</li>
+            <li>Provide a smooth and intuitive chatting experience for users.</li>
+        </ul>
+
+        <h2>Conclusion</h2>
+        <p>By integrating text similarity and intent recognition techniques, we transformed our basic rule-based chatbot into a versatile and robust conversational assistant. The combination of regex-based logic, TF-IDF, and cosine similarity ensured a balance between precision and adaptability, resulting in a user-friendly and engaging chatbot capable of handling a wide range of interactions.</p>
+    </main>
+</body>
+</html>
+
