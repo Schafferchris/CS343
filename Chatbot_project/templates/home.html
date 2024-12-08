@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<Header class ="borders">Virtual Assistant Chatbot</Header>
+<body>
+
+<!-- Line 14 - 19 Used to connect Endpoints from App.py also executes Nav JS functions -->    
+
+<nav id ="sidenav">
+    <a href ="javascript:void(0)" class="closebutton" onclick="closeNav()">&times;</a>
+    <a href="{{ url_for('about') }}">About</a>
+</nav>
+<span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Menu</span>
+
+<script>
+    function openNav() {
+      document.getElementById("sidenav").style.width = "250px";
+    }
+    
+    function closeNav() {
+      document.getElementById("sidenav").style.width = "0";
+    }
+    </script>
+
+    <div class="chat-container">
+        <div class="chat-box" id="chat-box"></div>
+        <input type="text" id="user-input" placeholder="Type your message..." autofocus>
+        <button id="send-btn">Send</button>
+    </div>
+
+    <!-- Script belows fetches the CSS properties from the chatbot and calls POST from app.py
+     to display message/response function in JSON -->
+    <script>
+        document.getElementById('send-btn').addEventListener('click', function() {
+            const userInput = document.getElementById('user-input').value;
+            if (userInput.trim() !== '') {
+                const chatBox = document.getElementById('chat-box');
+                chatBox.innerHTML += `<p><strong>You:</strong> ${userInput}</p>`;
+                
+                fetch('/get_response', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: userInput })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    chatBox.innerHTML += `<p><strong>Bot:</strong> ${data.response}</p>`;
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                });
+                
+                document.getElementById('user-input').value = '';
+            }
+        });
+
+        document.getElementById('user-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('send-btn').click();
+            }
+        });
+    </script>
+</body>
+</html>
